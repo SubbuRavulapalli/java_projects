@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
+
+    <context:component-scan base-package="com.jdbc"/>
+    <bean id="internalResourceViewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="suffix" value=".jsp"/>
+        <property name="prefix" value="WEB-INF/views/"/>
+    </bean>
+
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="url" value="jdbc:mysql://localhost:3306/clothstore"/>
+        <property name="driverClassName" value="com.mysql.cj.jdbc.Driver"/>
+        <property name="username" value="root"/>
+        <property name="password" value="password"/>
+    </bean>
+
+    <bean class="org.springframework.jdbc.core.JdbcTemplate" id="jdbcTemplate">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+    <bean id="productDaoimpl" class="com.jdbc.dao.daoimpl.ProductDaoimpl">
+        <property name="jdbcTemplate" ref="jdbcTemplate"/>
+    </bean>
+    <bean id="productServiceimpl" class="com.jdbc.service.serviceimpl.ProductServiceimpl">
+        <property name="productDaoimpl" ref="productDaoimpl"/>
+    </bean>
+
+    <bean class="com.jdbc.service.serviceimpl.CustomerServiceimpl" id="customerServiceimpl">
+        <property name="customerDaoimpl" ref="customerDaoimpl"/>
+    </bean>
+    <bean class="com.jdbc.dao.daoimpl.CustomerDaoimpl" id="customerDaoimpl">
+        <property name="jdbcTemplate" ref="jdbcTemplate"/>
+    </bean>
+
+    <bean class="com.jdbc.dao.daoimpl.AdminDaoimpl" id="adminDaoimpl">
+        <property name="jdbcTemplate" ref="jdbcTemplate"/>
+    </bean>
+    <bean class="org.springframework.web.client.RestTemplate" id="restTemplate"/>
+    <bean class="com.jdbc.service.serviceimpl.AdminServiceimpl" id="adminServiceimpl">
+        <property name="adminDaoimpl" ref="adminDaoimpl"/>
+        <property name="restTemplate" ref="restTemplate"/>
+    </bean>
+
+    <bean class="com.jdbc.handler.CustomSucessHandler" id="sucessHandler"/>
+    <bean class="com.jdbc.dao.daoimpl.CartDaoimpl" id="cartDaoimpl">
+        <property name="jdbcTemplate" ref="jdbcTemplate"/>
+    </bean>
+    <bean class="com.jdbc.service.serviceimpl.CartServiceimpl" id="cartServiceimpl">
+        <property name="cartDaoimpl" ref="cartDaoimpl"/>
+    </bean>
+    <bean class="com.jdbc.dao.daoimpl.PaymentDaoimpl" id="paymentDaoimpl">
+        <property name="jdbcTemplate" ref="jdbcTemplate"/>
+    </bean>
+    <bean class="com.jdbc.service.serviceimpl.PaymentServiceimpl" id="paymentServiceimpl">
+        <property name="paymentDaoimpl" ref="paymentDaoimpl"/>
+    </bean>
+    <bean class="com.jdbc.dao.daoimpl.AddressDaoimpl" id="addressDaoimpl">
+        <property name="jdbcTemplate" ref="jdbcTemplate"/>
+    </bean>
+    <bean class="com.jdbc.service.serviceimpl.AddressServiceimpl" id="addressServiceimpl">
+        <property name="addressDaoimpl" ref="addressDaoimpl"/>
+    </bean>
+
+
+
+
+<!--    <bean class="com.jdbc.validation.EmployeeValidation" id="employeeValidation"/>-->
+    <bean class="com.jdbc.validation.CustomerValidation" id="customerValidation"/>
+<!--    <bean id="productController2" class="com.jdbc.controller.ProductController">-->
+<!--        <property name="productServiceimpl" ref="productServiceimpl"/>-->
+<!--    </bean>-->
+</beans>
